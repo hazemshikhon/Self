@@ -42,7 +42,7 @@ export default class HomePage extends Component {
     }
 
     async componentDidMount() {
-        firebase.database().ref(`offers`).once('value', snap => {
+        firebase.database().ref(`orders/`).once('value', snap => {
             console.log('snap', snap);
 
             const val = snap.val();
@@ -117,57 +117,42 @@ export default class HomePage extends Component {
 
 
                 <FlatList
-                    data={this.state.offers}
-                    showsVerticalScrollIndicator={false}
-                    contentContainerStyle={{ flexGrow: 1, alignItems: 'center' }}
-                    keyExtractor={this._keyExtractor1}
-                    extraData={this.state}
-                    style={{ flex: .5, width: '100%', backgroundColor: 'white' }}
-                    renderItem={
-                        ({ item,index }) =>
-                            <View>
-                                <TouchableOpacity onPress={() => {
-                                    this.props.navigation.navigate('Single', { id: item.id, name: item.name, price: item.price, srs: item.photo, quantity: item.quantity });
+          data={this.state.offers}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ flexGrow: 1, alignItems: 'center' }}
+          keyExtractor={this._keyExtractor1}
+          extraData={this.state}
+          style={{ flex: .5, width: '100%', backgroundColor: 'white' }}
+          renderItem={
+            ({ item ,index }) =>
+              <View>
+                <TouchableOpacity onPress={() => {
+                  this.props.navigation.navigate('Single', { meals:this.state.meals[index] });
+                  console.log('f',this.state.meals[index])
 
-                                }}
-                                    style={{ elevation: 5, backgroundColor: '#e6b800', width: width }}>
-                                    <View style={{ flex: 1 }}>
-                                        <Image resizeMode='stretch' style={{
-                                            height: height * .15, width: width * .55,
-                                            resizeMode: 'stretch', elevation: 7, flex: .3, alignSelf: 'center'
-                                        }}
-                                            source={{ uri: item.photo }} />
+                }}
+                  style={{ elevation: 5, backgroundColor: '#e6b800', width: width, marginBottom: 4.5, borderRadius: 20, width: width * .98, marginTop: 5 }}>
+                  <View style={{ flexDirection: 'row' }}>
+                    <Image resizeMode='stretch' style={{
+                      height: height * .09, width: width * .21,
+                      resizeMode: 'stretch', marginVertical: 10, marginLeft: 10
+                    }}
+                      source={{uri:item.photo}} />
+                    <View style={{ justifyContent: 'center' }}>
+                      <Text style={{ color: '#f2f2f2', textAlign: 'right', fontSize: 22, fontWeight: 'bold', marginLeft: 40 }}>{item.name}</Text>
+                      <View style={{ backgroundColor: 'green', width: width * .17, marginLeft: 40, marginTop: 5, borderRadius: 6 }}>
+                        <Text style={{ color: '#f2f2f2', textAlign: 'center', fontSize: 15, fontWeight: 'bold' }}>Price : {item.price}</Text>
+                      </View>
+                    </View>
+                  </View>
 
-                                        <View style={{ justifyContent: 'center', flex: .7, justifyContent: 'space-between' }}>
-                                            <Text style={{ color: '#f2f2f2', textAlign: 'center', fontSize: 22, fontWeight: 'bold', marginBottom: 5 }}>{item.name}</Text>
-                                            <Text style={{ color: '#f2f2f2', textAlign: 'center', fontSize: 17, fontWeight: 'bold' }}>{item.desc} </Text>
-                                        </View>
-                                        <View style={{ backgroundColor: 'green', width: width * .30, marginTop: 5, borderRadius: 6, alignSelf: 'center', marginBottom: 5 }}>
-                                            <Text style={{ color: '#f2f2f2', textAlign: 'center', fontSize: 20, fontWeight: 'bold' }}>Price : {item.price}</Text>
-                                        </View>
-                                        <TouchableOpacity
-                                            onPress={() => {
-                                                this.storeData(this.state.offers[index]);
-                                            }}
-                                            style={{
-                                                backgroundColor: '#ffdb4d', marginBottom: 20,
-                                                paddingVertical: 5, paddingHorizontal: 1, borderRadius: 15,
-                                                alignItems: 'center', justifyContent: 'center', alignSelf: 'center',
-                                                borderWidth: 1, borderColor: 'white', width: width * .4, elevation: 5
-                                            }}>
+                </TouchableOpacity>
 
-                                            <Text style={{ color: 'black', fontWeight: 'bold' }}>Add to Cart</Text>
+              </View>
 
-                                        </TouchableOpacity>
-                                    </View>
-
-                                </TouchableOpacity>
-
-                            </View>
-
-                    }
-                >
-                </FlatList>
+          }
+        >
+        </FlatList>
             </View>
         );
     };

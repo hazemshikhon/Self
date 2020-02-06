@@ -6,28 +6,39 @@ import Home from './screens/homepage'
 import Menu from './screens/menu'
 import Cart from './screens/cart'
 import Single from './screens/single'
+import Profile from './screens/profile'
+import Orders from './screens/orders'
 
 const AppNavigator = createStackNavigator({
-  
 
   Menu:{
     screen:Menu
   },
+  Profile:{
+    screen: Profile
+},
+  Home:{
+    screen: Home
+},
+  
+  
+Orders:{
+  screen: Orders
+},
+  
+  Login:{
+    screen: Login
+},
+
  
   SignUp:{
     screen: SignUp
-},
-  Login:{
-    screen: Login
 },
 
   Single:{
     screen:Single
   },
   
-  Home:{
-    screen: Home
-},
 Cart:{
   screen:Cart
 }

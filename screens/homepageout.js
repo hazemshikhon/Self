@@ -127,17 +127,18 @@ export default class HomePage extends Component {
           extraData={this.state}
           style={{ flex: .5, width: '100%', backgroundColor: 'white' }}
           renderItem={
-            ({ item }) =>
+            ({ item ,index }) =>
               <View>
                 <TouchableOpacity onPress={() => {
-                  this.props.navigation.navigate('Single', { id: item.id, name: item.name, price: item.price, srs: item.photo, quantity: item.quantity });
+                  this.props.navigation.navigate('Single', { meals:this.state.meals[index] });
+                  console.log('f',this.state.meals[index])
 
                 }}
                   style={{ elevation: 5, backgroundColor: '#e6b800', width: width, marginBottom: 4.5, borderRadius: 20, width: width * .98, marginTop: 5 }}>
                   <View style={{ flexDirection: 'row' }}>
                     <Image resizeMode='stretch' style={{
                       height: height * .09, width: width * .21,
-                      resizeMode: 'stretch', marginVertical: 10, marginLeft: 10, elevation: 5
+                      resizeMode: 'stretch', marginVertical: 10, marginLeft: 10
                     }}
                       source={{uri:item.photo}} />
                     <View style={{ justifyContent: 'center' }}>

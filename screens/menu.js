@@ -9,7 +9,7 @@ import { TabBarBottom  } from 'react-navigation';
 import Login from './login'
 import Offers from './offers'
 import Iconic from 'react-native-vector-icons/FontAwesome';
-import Single from './single'
+import Profile from './profile'
 import { Container, Header, Content, Footer, FooterTab, Button, Icon, Text } from 'native-base';
 class MyHomeScreen extends React.Component {
   
@@ -90,8 +90,9 @@ const TabNavigator = createBottomTabNavigator({
         ),
 
       },
-  },Profile: {
-    screen:Home ,
+  },
+  Profile: {
+    screen:Profile ,
     navigationOptions:{
       tabBarIcon: ({ focused }) => (
         focused ?
