@@ -10,6 +10,8 @@ import Login from './login'
 import Offers from './offers'
 import Iconic from 'react-native-vector-icons/FontAwesome';
 import Profile from './profile'
+import strings from '../component/Localization';
+
 import { Container, Header, Content, Footer, FooterTab, Button, Icon, Text } from 'native-base';
 class MyHomeScreen extends React.Component {
   
@@ -33,6 +35,33 @@ class MyHomeScreen extends React.Component {
   }
 }
 class Hazem extends React.Component {
+ async componentDidMount() {
+        
+   
+       await this.setUpLang();
+    
+}
+  async setUpLang() {
+    try {
+        let lang = await AsyncStorage.getItem('lang')
+        lang = (lang == null) ? 'ar' : lang
+        console.log('intro2',lang);
+        this.setLang(lang)
+    } catch (e) {
+        console.log(e);
+    }
+}
+
+setLang(lang) {
+    try {
+        strings.setLanguage(lang);
+        // lang = (lang == 'ar') ? 'en' : 'ar'
+        AsyncStorage.setItem('lang', lang)
+        this.setState({ lang })
+    } catch (e) {
+        console.log(e);
+    }
+}
   render() {
 
     return (
@@ -63,6 +92,7 @@ const TabNavigator = createBottomTabNavigator({
   Home: {
       screen:HomeOut ,
       navigationOptions:{
+        title:strings.HOME,
         tabBarIcon: ({ focused }) => (
           focused ?
           <Iconic size={22} name="home" />: <Iconic size={22} name="home" />
@@ -73,6 +103,7 @@ const TabNavigator = createBottomTabNavigator({
   Offers: {
     screen:Offers ,
     navigationOptions:{
+      title:strings.offers,
       tabBarIcon: ({ focused }) => (
         focused ?
         <Icon  name="md-pizza" />: <Icon name="md-pizza" />
@@ -83,7 +114,7 @@ const TabNavigator = createBottomTabNavigator({
  Login: {
       screen:Cart ,
       navigationOptions:{
-        title:'Cart',
+        title:strings.cart,
         tabBarIcon: ({ focused }) => (
           focused ?
           <Iconic size={23} name="shopping-cart" />: <Iconic size={23} name="shopping-cart" />
@@ -94,6 +125,7 @@ const TabNavigator = createBottomTabNavigator({
   Profile: {
     screen:Profile ,
     navigationOptions:{
+      title:strings.PROFILE,
       tabBarIcon: ({ focused }) => (
         focused ?
         <Icon  size={23} name="md-person" />: <Icon size={23} name="md-person" />

@@ -12,6 +12,7 @@ import {
   TouchableHighlight,
 } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
+import strings from '../component/Localization';
 
 import { Button } from 'native-base';
 //import CheckBox from '@react-native-community/checkbox';
@@ -47,6 +48,8 @@ export default class HomePage extends Component {
   }
 
   async componentDidMount() {
+    this.setUpLang();
+
      firebase.database().ref(`meals`).once('value', snap => {
         console.log('snap', snap);
 
@@ -108,6 +111,26 @@ export default class HomePage extends Component {
   //     // saving error
   //   }
   // }
+  
+  async setUpLang() {
+    try {
+        let lang = await AsyncStorage.getItem('lang')
+        lang = (lang == null) ? 'ar' : lang
+        this.setLang(lang)
+    } catch (e) {
+        console.log(e);
+    }
+}
+
+setLang(lang) {
+    try {
+        strings.setLanguage(lang);
+        AsyncStorage.setItem('lang', lang)
+        this.setState({ lang })
+    } catch (e) {
+        console.log(e);
+    }
+}
   render() {
     if(!this.state.doneFetching)
     return (<LoadingIndicator size="large" />);

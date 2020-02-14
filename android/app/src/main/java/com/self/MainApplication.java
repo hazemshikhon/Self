@@ -10,8 +10,8 @@ import com.facebook.soloader.SoLoader;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import com.oblador.vectoricons.VectorIconsPackage;
-
-
+import com.avishayil.rnrestart.ReactNativeRestartPackage;
+import com.babisoft.ReactNativeLocalization.ReactNativeLocalizationPackage;
 import io.invertase.firebase.RNFirebasePackage;
 import io.invertase.firebase.fabric.crashlytics.RNFirebaseCrashlyticsPackage;
 import io.invertase.firebase.auth.RNFirebaseAuthPackage;
@@ -40,6 +40,8 @@ public class MainApplication extends Application implements ReactApplication {
       packages.add(new RNFirebaseDatabasePackage());
       packages.add(new RNFirebaseStoragePackage());
       packages.add(new RNFirebaseMessagingPackage());
+       new ReactNativeLocalizationPackage();
+        new ReactNativeRestartPackage();
           return packages;
         }
 

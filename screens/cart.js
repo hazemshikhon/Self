@@ -16,7 +16,7 @@ import Entypo from "react-native-vector-icons/FontAwesome";
 import LoadingIndicator from '../component/LoadingIndicator';
 import firebase from 'react-native-firebase'
 //import { Icon } from 'react-native-elements'
-
+import moment from 'moment';
 import { Button, Icon } from 'native-base';
 import AsyncStorage from '@react-native-community/async-storage';
 import NumericInput from 'react-native-numeric-input'
@@ -70,6 +70,7 @@ export default class Cart extends Component {
         const x = JSON.parse(value)
 
         this.setState({ data: x })
+
         console.log('next', this.state.data.extra)
         AsyncStorage.removeItem('alldata')
         AsyncStorage.setItem('alldata', JSON.stringify(this.state.data))
@@ -81,6 +82,27 @@ export default class Cart extends Component {
 
     } catch (e) {
       alert('eeroe')
+    }
+  }
+
+  hazem = () =>{
+    const current  = moment().unix()
+
+    const {data}=this.state;
+    for(var i in data){
+      
+      firebase.database().ref(`orders/${current}`).push(
+                         
+        data[i]
+        
+       
+     ).then(() => {
+       console.log('INSERTED !')
+     }
+     ).catch(error =>{
+       console.log(error)
+       
+       })
     }
   }
   getTotal = async () => {
@@ -173,18 +195,13 @@ export default class Cart extends Component {
           </FlatList>
           <TouchableOpacity
                     onPress={() => {
-                        firebase.database().ref(`orders`).push(
-                          {
-                            ...data
-
-                          }
-                        ).then(() => {
-                          console.log('INSERTED !')
-                        }
-                        ).catch(error =>{
-                          console.log(error)
-                          
-                          })
+                    
+                      
+                       {this.hazem();
+                     
+                          AsyncStorage.removeItem('alldata')};
+                          this.setState({data:[]})
+                       
                     }}
                     style={{
                       backgroundColor: '#ffdb4d',marginBottom:2,marginTop:5,

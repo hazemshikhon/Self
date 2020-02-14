@@ -9,17 +9,22 @@ import {
     TextInput,
     Dimensions,
     ActivityIndicator,
-    Image
+    Image,
+   
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 const { height, width } = Dimensions.get('window')
 import { SocialIcon } from 'react-native-elements';
 import AsyncStorage from '@react-native-community/async-storage';
+import strings from '../component/Localization';
+import RNRestart from 'react-native-restart';
+import Modal, { ModalContent, SlideAnimation } from 'react-native-modals';
 
 export default class Profile extends Component {
     constructor() {
         super()
         this.state = {
+             modal: false,
             thingsToTranslate: {
                 orders: 'Orders',
                 about: 'About us',
@@ -42,28 +47,60 @@ export default class Profile extends Component {
     }
     componentDidMount() {
         
-        AsyncStorage.getItem("language").then((value) => {
-          if (value == '0') {
-            this.setState({
-              thingsToTranslate: {
-                orders: 'Orders',
-                addresses: 'addresses',
-                switch: 'Switch to arabic',
-                logout: 'Log out',
-              }
-            });
-          } else {
-              this.setState({
-                thingsToTranslate: {
-                orders: 'المشتريات',
-                switch:'تحويل الي الانجليزيه',
-                addresses:'عنواين',
-                logout: 'تسجيل الخروج' ,
-              }
-              });
-          }
-        })
+        // AsyncStorage.getItem("language").then((value) => {
+        //   if (value == '0') {
+        //     this.setState({
+        //       thingsToTranslate: {
+        //         orders: 'Orders',
+        //         addresses: 'addresses',
+        //         switch: 'Switch to arabic',
+        //         logout: 'Log out',
+        //       }
+        //     });
+        //   } else {
+        //       this.setState({
+        //         thingsToTranslate: {
+        //         orders: 'المشتريات',
+        //         switch:'تحويل الي الانجليزيه',
+        //         addresses:'عنواين',
+        //         logout: 'تسجيل الخروج' ,
+        //       }
+        //       });
+        //   }
+        // })
+            this.setUpLang();
+        
     }
+    async setUpLang() {
+        try {
+            let lang = await AsyncStorage.getItem('lang')
+            lang = (lang == null || lang == undefined) ? 'ar' : lang
+            this.setLang(lang)
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    setLang(lang) {
+        try {
+            if (!lang) {
+                lang = (lang == null || lang == undefined) ? 'ar' : lang
+            }
+            strings.setLanguage(lang);
+            AsyncStorage.setItem('lang', lang)
+            this.setState({ lang })
+        } catch (e) {
+            console.log(e);
+        }
+    }
+    
+    openModal() {
+        this.setState({ visible: true });
+      }
+    
+      closeModal() {
+        this.setState({ visible: false });
+      }
     render() {
         return (
             <View style={styles.basicBackground}>
@@ -83,7 +120,7 @@ export default class Profile extends Component {
                                 end={{ x: 1, y: 0 }}
                                 colors={['#e6b800', '#ffcc00', '#997a00']}
                                 style={styles.linearGradient}>
-                                <Text style={{ fontWeight: 'bold', fontSize: 24, marginLeft: 15 }}>{this.state.thingsToTranslate.orders}</Text>
+                                <Text style={{ fontWeight: 'bold', fontSize: 24, marginLeft: 15 }}>{strings.orders}</Text>
 
                             </LinearGradient>
                         </TouchableOpacity>
@@ -96,7 +133,7 @@ export default class Profile extends Component {
                                 end={{ x: 1, y: 0 }}
                                 colors={['#e6b800', '#ffcc00', '#997a00']}
                                 style={styles.linearGradient}>
-                                <Text style={{ fontWeight: 'bold', fontSize: 24, marginLeft: 15 }}>{this.state.thingsToTranslate.addresses}</Text>
+                                <Text style={{ fontWeight: 'bold', fontSize: 24, marginLeft: 15 }}>{strings.addresses}</Text>
                             </LinearGradient>
                         </TouchableOpacity>
 
@@ -108,18 +145,20 @@ export default class Profile extends Component {
                                 end={{ x: 1, y: 0 }}
                                 colors={['#e6b800', '#ffcc00', '#997a00']}
                                 style={styles.linearGradient}>
-                                <Text style={{ fontWeight: 'bold', fontSize: 24, marginLeft: 15 }}>Edit Profile</Text>
+                                <Text style={{ fontWeight: 'bold', fontSize: 24, marginLeft: 15 }}>{strings.edit}</Text>
                             </LinearGradient>
                         </TouchableOpacity>
                         <TouchableOpacity style={{ marginTop: 50 }} onPress={() => {
-                             AsyncStorage.getItem("language").then((value) => {
-                                if (value == '0') {AsyncStorage.setItem("language",'1')}
-                                else{
-                                    AsyncStorage.setItem("language",'0')
-                                }
-                            })
+                            //  AsyncStorage.getItem("language").then((value) => {
+                            //     if (value == '0') {AsyncStorage.setItem("language",'1')}
+                            //     else{
+                            //         AsyncStorage.setItem("language",'0')
+                            //     }
+                            // })
                                 
-                            
+                            this.setLang('ar');
+                            RNRestart.Restart();
+
                         }}>
                             <LinearGradient
                                 start={{ x: 0, y: 0 }}
@@ -130,19 +169,17 @@ export default class Profile extends Component {
                             </LinearGradient>
                         </TouchableOpacity>
                         <TouchableOpacity style={{ marginTop: 50 }} onPress={() => {
-                            this.props.navigation.navigate('Menu')
-                        }}>
+                            this.setState({ visible: true })}
+
+                        }>
                             <LinearGradient
                                 start={{ x: 0, y: 0 }}
                                 end={{ x: 1, y: 0 }}
                                 colors={['#e6b800', '#ffcc00', '#997a00']}
                                 style={styles.linearGradient}>
-                                    <Text style={{fontWeight:'bold',fontSize:24,marginLeft:15}}>{this.state.thingsToTranslate.logout}</Text>
+                                    <Text style={{fontWeight:'bold',fontSize:24,marginLeft:15}}>{strings.logout}</Text>
                             </LinearGradient>
                         </TouchableOpacity>
-
-
-
 
                     </View>
 
@@ -161,8 +198,8 @@ const styles = StyleSheet.create({
     },
     background: {
         backgroundColor: '#b38f00',
-        height: '105%',
-        width: '90%',
+        height: height*.8,
+        width: width*.9,
         borderTopRightRadius: 30,
         borderBottomRightRadius: 30,
         marginTop: height * 0.05,

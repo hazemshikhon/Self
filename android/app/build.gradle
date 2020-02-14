@@ -189,6 +189,8 @@ dependencies {
     implementation "com.google.firebase:firebase-storage:17.0.0"
     implementation 'com.google.firebase:firebase-messaging:18.0.0'
     implementation "com.google.android.gms:play-services-base:16.1.0"
+    implementation project(':react-native-restart')
+     implementation project(':react-native-localization')
     implementation project(':react-native-vector-icons')
     if (enableHermes) {
         def hermesPath = "../../node_modules/hermes-engine/android/";

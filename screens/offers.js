@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import LoadingIndicator from '../component/LoadingIndicator';
+import strings from '../component/Localization';
 
 import { Button } from 'native-base';
 
@@ -156,7 +157,7 @@ export default class HomePage extends Component {
                                                 borderWidth: 1, borderColor: 'white', width: width * .4, elevation: 5
                                             }}>
 
-                                            <Text style={{ color: 'black', fontWeight: 'bold' }}>Add to Cart</Text>
+                                            <Text style={{ color: 'black', fontWeight: 'bold' }}>{strings.ad}</Text>
 
                                         </TouchableOpacity>
                                     </View>
