@@ -14,17 +14,23 @@ import {
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 const { height, width } = Dimensions.get('window')
-import { SocialIcon } from 'react-native-elements';
+import { SocialIcon, Avatar } from 'react-native-elements';
 import AsyncStorage from '@react-native-community/async-storage';
 import strings from '../component/Localization';
 import RNRestart from 'react-native-restart';
+import { StackActions, NavigationActions } from 'react-navigation';
+import ImagePicker from 'react-native-image-picker';
+import firebase from 'react-native-firebase'
+
 import Modal, { ModalContent, SlideAnimation } from 'react-native-modals';
 
 export default class Profile extends Component {
     constructor() {
         super()
         this.state = {
+            images:[],
              modal: false,
+             loading:true,
             thingsToTranslate: {
                 orders: 'Orders',
                 about: 'About us',
@@ -46,31 +52,91 @@ export default class Profile extends Component {
         }
     }
     componentDidMount() {
+        firebase.database().ref(`meals`).once('value', snap => {
+            console.log('snap', snap);
+    
+            const val = snap.val();
+            console.log('val', val);
+    
+            const meals = Object.values(val)
+            console.log('meals', meals);
+            this.setState({ meals });
+            this.setState({doneFetching: true})
+    
+        })
         
-        // AsyncStorage.getItem("language").then((value) => {
-        //   if (value == '0') {
-        //     this.setState({
-        //       thingsToTranslate: {
-        //         orders: 'Orders',
-        //         addresses: 'addresses',
-        //         switch: 'Switch to arabic',
-        //         logout: 'Log out',
-        //       }
-        //     });
-        //   } else {
-        //       this.setState({
-        //         thingsToTranslate: {
-        //         orders: 'المشتريات',
-        //         switch:'تحويل الي الانجليزيه',
-        //         addresses:'عنواين',
-        //         logout: 'تسجيل الخروج' ,
-        //       }
-        //       });
-        //   }
-        // })
             this.setUpLang();
         
     }
+    async uploadImage(uri) {
+        try {
+            if (uri) {                
+                // upload the image to the storage under folder called Uploads with the timestamp of upload
+                const imageRef = firebase.storage().ref(`Uploads/${Date.now()}.jpg`)
+                await imageRef.putFile(uri, { contentType: 'application/octet-stream' })
+                
+                // get the download url of the image 
+                let url = await imageRef.getDownloadURL()
+
+                this.setState({url})
+
+               
+                firebase.database().ref(`users/${firebase.auth().currentUser.uid}`).update(
+      { avatar:url}
+                  )
+               console.log(firebase.auth().currentUser.uid);
+               
+               this.setState({
+                loading: false,
+              })
+                // send the url to the other person at the chat
+                
+                
+            }
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    selectImage() {
+        // try {
+        let { images } = this.state;
+
+        // the options for picking the image  
+        const options = {
+            quality: 0.5,
+            // maxWidth: 500,
+            // maxHeight: 500,
+            storageOptions: {
+                skipBackup: true
+            }
+        };
+        // get the image from gallery
+        ImagePicker.launchImageLibrary(options, (response) => {
+
+            let imagePath;
+
+            if (Platform.OS === "android") imagePath = response.path;
+            else imagePath = response.uri;
+
+            console.log('response', response);
+            if (!response.didCancel){
+                images.push({
+                    path: imagePath,
+                    data: response.data,
+                    type: response.type
+                })
+                this.setState({ images });
+                let source = { uri: 'data:image/jpeg;base64,' + response.data };
+                this.setState({response :response.data})
+            } 
+             this.uploadImage(response.path);
+        });
+        // } catch (e) {
+        //     console.log(e);
+        // }
+    }
+
     async setUpLang() {
         try {
             let lang = await AsyncStorage.getItem('lang')
@@ -102,19 +168,26 @@ export default class Profile extends Component {
         this.setState({ visible: false });
       }
     render() {
+         
+        const {images} = this.state
         return (
             <View style={styles.basicBackground}>
 
                 <View style={{ flex: .8 }}>
                     <View style={styles.background}>
                         <View style={{ alignItems: 'center', alignItems: 'center', marginTop: 15 }}>
+                            <TouchableOpacity
+                             onPress={() => this.selectImage()}>
                             <Image
                                 source={require('../assets/icons/images.jpg')}
+                               // source ={{uri:this.state.url}}
                                 style={{ width: 90, height: 90, borderRadius: 25, borderColor: 'black', borderWidth: 2 }} />
+                                </TouchableOpacity>
                         </View>
                         <TouchableOpacity style={{ marginTop: 50 }} onPress={() => {
-                            this.props.navigation.navigate('Orders')
+                            this.props.navigation.navigate('Maps')
                         }}>
+                            
                             <LinearGradient
                                 start={{ x: 0, y: 0 }}
                                 end={{ x: 1, y: 0 }}
@@ -157,7 +230,13 @@ export default class Profile extends Component {
                             // })
                                 
                             this.setLang('ar');
-                            RNRestart.Restart();
+                            const resetAction = StackActions.reset({
+                                index: 0,
+                                actions: [NavigationActions.navigate({ routeName: 'Menu'})],
+                                // actions: [NavigationActions.navigate({ routeName: 'Drawer', params: { user } })],
+                              });
+                              this.props.navigation.dispatch(resetAction);
+                            //RNRestart.Restart();
 
                         }}>
                             <LinearGradient
@@ -165,13 +244,26 @@ export default class Profile extends Component {
                                 end={{ x: 1, y: 0 }}
                                 colors={['#e6b800', '#ffcc00', '#997a00']}
                                 style={styles.linearGradient}>
-                                <Text style={{ fontWeight: 'bold', fontSize: 24, marginLeft: 15 }}>{this.state.thingsToTranslate.switch}</Text>
+                                <Text style={{ fontWeight: 'bold', fontSize: 24, marginLeft: 15 }}>{strings.lang}</Text>
                             </LinearGradient>
                         </TouchableOpacity>
                         <TouchableOpacity style={{ marginTop: 50 }} onPress={() => {
-                            this.setState({ visible: true })}
+                            //  const resetAction = StackActions.reset({
+                            //     index: 0,
+                            //     actions: [NavigationActions.navigate({ routeName: 'Menu'})],
+                            //     // actions: [NavigationActions.navigate({ routeName: 'Drawer', params: { user } })],
+                            //   });
+                            //   this.props.navigation.dispatch(resetAction);
+                            // this.setLang('en') 
+                           firebase.auth().signOut();
+                           const resetAction = StackActions.reset({
+                            index: 0,
+                            actions: [NavigationActions.navigate({ routeName: 'Login'})],
+                          });
+                          this.props.navigation.dispatch(resetAction);
+                        }}
 
-                        }>
+                        >
                             <LinearGradient
                                 start={{ x: 0, y: 0 }}
                                 end={{ x: 1, y: 0 }}

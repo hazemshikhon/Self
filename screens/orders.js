@@ -26,15 +26,6 @@ export default class HomePage extends Component {
       value: 1,
       size: '',
       isChecked6: false,
-      // data: [
-      //     { id: '0', name: 'Pizza Margrita', price: 10, photo: require('../icons/offer4.png'), quantity: 1 },
-      //     { id: '1', name: 'Pizza Mix Meat', price: 20, photo: require('../icons/offer5.png'), quantity: 1 },
-      //     { id: '2', name: 'Pizza Chicken', price: 15, photo: require('../icons/offer6.png'), quantity: 1 },
-      //     { id: '3', name: 'Pizza Red Cheese', price: 25, photo: require('../icons/offer7.png'), quantity: 1 },
-      //     { id: '4', name: 'Pizza Mix Cheese', price: 5, photo: require('../icons/offer8.png'), quantity: 1 },
-      //     { id: '5', name: 'Pizza Hotdog', price: 45, photo: require('../icons/offer9.png'), quantity: 1 },
-      //     { id: '6', name: 'Pizza Gampry', price: 55, photo: require('../icons/offer4.png'), quantity: 1 },
-      // ],
       offers: [],
       doneFetching: false,
     }
@@ -49,53 +40,16 @@ export default class HomePage extends Component {
 
       const offers = Object.values(val)
       console.log('meals', offers);
-      const keys = Object.keys(offers[3])
+      const keys = Object.keys(offers)
       //console.log('plz', keys)
-      let arr = [];
-      for (let i = 0; i < offers.length; i++) {
-        const keys = Object.keys(offers[i])
-        console.log('try', keys)
-      }
-
-      firebase.database().ref(`try/${keys}`).once('value', snap => {
-        const val2 = snap.val();
-        console.log('val2', val2);
-  
-        const offers2 = Object.values(val2)
-        console.log('meals2', offers2);
-     
-      })
-
-
-
-
+      this.setState({keys})
+      alert(this.state.keys)
       this.setState({ offers });
       this.setState({ doneFetching: true })
 
 
     })
-    //   firebase.database().ref(`orders`).once('value', Snap => {
-
-    //     console.log('Snap', Snap);
-    //     if (Snap.exists()) {
-    //         const val = Snap.val();
-    //         console.log('val', val);
-
-    //         const keys = Object.keys(val);
-    //         console.log('keys', keys);
-
-    //         const offers = Object.values(val)
-    //         console.log('offers', offers);
-
-    //         let arr = []
-    //         for (let i = 0; i < keys.length; i++) {
-    //             // arr.push(keys[i], clinicEarnings[i]);
-    //             arr.push({ keys: keys[i], ...offers[i] });
-    //             console.log('arr', arr);
-    //         }
-    //         this.setState({ offers });
-    //     }
-    // })
+   
   }
   renderSize(sizeType) {
     const { size } = this.state;
@@ -167,9 +121,6 @@ export default class HomePage extends Component {
             ({ item, index }) =>
               <View>
                 <TouchableOpacity onPress={() => {
-                  this.props.navigation.navigate('Single', { meals: this.state.meals[index] });
-                  console.log('f', this.state.meals[index])
-
                 }}
                   style={{ elevation: 5, backgroundColor: '#e6b800', width: width, marginBottom: 4.5, borderRadius: 20, width: width * .98, marginTop: 5 }}>
                   <View style={{ flexDirection: 'row' }}>

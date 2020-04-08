@@ -191,6 +191,12 @@ dependencies {
     implementation "com.google.android.gms:play-services-base:16.1.0"
     implementation project(':react-native-restart')
      implementation project(':react-native-localization')
+
+     implementation project(':react-native-maps')
+     implementation "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
+     implementation 'com.google.android.gms:play-services-base:11.+'
+   implementation 'com.google.android.gms:play-services-maps:11.+'
+   implementation 'com.google.android.gms:play-services-location:+'
     implementation project(':react-native-vector-icons')
     if (enableHermes) {
         def hermesPath = "../../node_modules/hermes-engine/android/";

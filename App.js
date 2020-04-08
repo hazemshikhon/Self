@@ -8,33 +8,41 @@ import Cart from './screens/cart'
 import Single from './screens/single'
 import Profile from './screens/profile'
 import Orders from './screens/orders'
+import Maps from './screens/maps'
 
 const AppNavigator = createStackNavigator({
-  Menu: {
-    screen: Menu
-  },
-  Home: {
-    screen: Home
-  },
-
-
-  Profile: {
-    screen: Profile
-  },
-
-  Orders: {
-    screen: Orders
-  },
 
   Login: {
     screen: Login
   },
-
-
   SignUp: {
     screen: SignUp
   },
+  Menu: {
+    screen: Menu
+  },
+  SignUp: {
+    screen: SignUp
+  },
+  
+ 
+ 
+ 
+  Profile: {
+    screen: Profile
+  },
 
+ 
+  Maps:{
+    screen:Maps
+  },
+  Home: {
+    screen: Home
+  },
+ 
+  Orders: {
+    screen: Orders
+  },
   Single: {
     screen: Single
   },

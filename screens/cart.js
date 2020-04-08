@@ -54,7 +54,6 @@ export default class Cart extends Component {
       }
 
     });
-    this.setState({ doneFetching: true })
 
   }
   // componentWillUnmount() {
@@ -62,27 +61,46 @@ export default class Cart extends Component {
 
   // }
   
+  // getData = async () => {
+  //   try {
+  //     const value = await AsyncStorage.getItem('alldata')
+  //     if (value !== null) {
+  //       this.setState({ value: 1 })
+  //       const x = JSON.parse(value)
+
+  //       this.setState({ data: x })
+
+  //       AsyncStorage.removeItem('alldata')
+  //       AsyncStorage.setItem('alldata', JSON.stringify(this.state.data))
+        
+  //     }
+
+
+  //   } catch (e) {
+  //     alert('eeroe')
+  //   }
+  // }
   getData = async () => {
     try {
-      const value = await AsyncStorage.getItem('alldata')
-      if (value !== null) {
+      firebase.database().ref(`users/${firebase.auth().currentUser.uid}/cart`).once('value', snap => 
+      {
+        
+        const val = snap.val();
         this.setState({ value: 1 })
-        const x = JSON.parse(value)
-
-        this.setState({ data: x })
-
-        console.log('next', this.state.data.extra)
-        AsyncStorage.removeItem('alldata')
-        AsyncStorage.setItem('alldata', JSON.stringify(this.state.data))
-        console.log('cart', this.state.data)
-        console.log('total', this.state.data)
-
-      }
-
-
+        const cart = Object.values(val)
+        console.log('cart', cart);
+        this.setState({data:val})
+        console.log("done");
+        console.log(this.state.data);
+        
+        
+        this.setState({doneFetching: true})
+      })
     } catch (e) {
-      alert('eeroe')
+      alert('error')
     }
+
+
   }
 
   hazem = () =>{
@@ -176,8 +194,14 @@ export default class Cart extends Component {
                       <TouchableOpacity style={{flex:.2}} onPress={() => {
                         data.splice(index,1);
                         this.setState({data});
-                        //this.storeData(data)
+                       
                         AsyncStorage.setItem('alldata',JSON.stringify(data))
+                        firebase.database().ref(`users/${firebase.auth().currentUser.uid}`).update(
+                          {
+                            cart:data,
+                          }
+                        )
+                        
                       }}>
                         <Icon name={'close'} />
 
@@ -197,10 +221,11 @@ export default class Cart extends Component {
                     onPress={() => {
                     
                       
-                       {this.hazem();
-                     
-                          AsyncStorage.removeItem('alldata')};
-                          this.setState({data:[]})
+                      firebase.database().ref(`users/${firebase.auth().currentUser.uid}`).update(
+                        {
+                          orders:data,
+                        }
+                      )
                        
                     }}
                     style={{

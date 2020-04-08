@@ -10,18 +10,19 @@ let strings = new LocalizedStrings({
     addresses:'عنواين',
     logout: 'تسجيل الخروج' ,
     orders: 'المشتريات',
+    lang:'تحويل اللغه الي الانجليزيه'
   },
   en: {
-    HOME: 'Homee',
+    HOME: 'Home',
     offers: 'Offers',
     cart: 'Cart',
-    
     PROFILE: 'Profile',
     ad: 'Add to Cart',
     edit:'Edit Profile',
     addresses: 'addresses',
     logout: 'Log out',
     orders: 'Orders',
+    lang:'Switch language to arbic'
     
   }
 });

@@ -14,6 +14,8 @@ import {
 import LinearGradient from 'react-native-linear-gradient';
 const { height, width } = Dimensions.get('window')
 import { SocialIcon } from 'react-native-elements';
+import firebase from 'react-native-firebase'
+import AsyncStorage from '@react-native-community/async-storage';
 
 export default class Login extends Component {
   constructor() {
@@ -25,9 +27,61 @@ export default class Login extends Component {
       emailError: '',
       passwordError: '',
       loading: false,
-      arr:[{name:'hazem'}]
     }
   }
+
+  onButtonPress = () => {
+    const { email, password } = this.state;
+    this.setState({
+      error: '',
+      emailError: '',
+      passwordError: '',
+      loading: true
+    })
+
+
+    
+    if (this.state.email == '') {
+      this.setState({ emailError: 'please enter email', loading: false })
+    }
+    if (this.state.password == '') {
+      this.setState({ passwordError: 'please enter password', loading: false })
+    }
+    if (this.state.email != '' && this.state.password != '') {
+      
+      firebase.auth().signInWithEmailAndPassword(email, password)
+        .then(res => this.onLoginSuccess(res))
+        .catch(err => this.onLoginFail(err))
+    }
+
+   
+
+  }
+
+  onLoginSuccess(res) {
+    console.log('res', res.user._user);
+    AsyncStorage.setItem('user',JSON.stringify(res.user._user))  
+
+    
+
+    
+    this.setState({
+      loading: false,
+    })
+    this.props.navigation.navigate('Menu')
+  }
+
+  onLoginFail(err) {
+    console.log('err', err.code);
+    alert(err)
+    
+    this.setState({
+      error: 'wrong email or password',
+      loading: false
+    });
+  }
+
+
   renderButton() {
     if (this.state.loading) {
       return <ActivityIndicator size="large" color="#ffffff" />
@@ -55,14 +109,8 @@ export default class Login extends Component {
             underlineColorAndroid='#cccccc'
             placeholder="Enter Email"
             placeholderTextColor='#cccccc'
-            // value={this.state.email}
-            // onChangeText={(email) => this.setState({ email })}
-            value={this.state.arr[0].name}
-            onChangeText={(name) => {
-              arr[0].name=name
-              this.setState({ arr })
-              alert(JSON.stringify(arr))
-            }}
+            value={this.state.email}
+            onChangeText={(email) => this.setState({ email })}
           />
 
           <Text style={styles.text2}>
@@ -77,8 +125,9 @@ export default class Login extends Component {
             value={this.state.password}
             onChangeText={(password) => this.setState({ password })}
           />
-           <TouchableOpacity style={{marginTop:50 }}onPress={() => {
-              this.props.navigation.navigate('Menu')}}>
+          <Text>{this.state.emailError},{  this.state.passwordError}</Text>
+           <TouchableOpacity style={{marginTop:50 }}  
+           onPress={this.onButtonPress.bind(this)}>
            <LinearGradient
                   start={{ x: 0, y: 0 }}
                   end={{ x: 1, y: 0 }}

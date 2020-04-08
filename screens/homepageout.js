@@ -1,4 +1,3 @@
-
 import React, { Component } from 'react';
 import {
   StyleSheet,
@@ -13,17 +12,9 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import strings from '../component/Localization';
-
-import { Button } from 'native-base';
-//import CheckBox from '@react-native-community/checkbox';
-import CheckBox from 'react-native-check-box'
-import Iconic from 'react-native-vector-icons/FontAwesome';
-import Single from './single'
 import LoadingIndicator from '../component/LoadingIndicator';
 
-import Modal, { ModalContent, SlideAnimation } from 'react-native-modals';
 import firebase from 'react-native-firebase'
-import NumericInput from 'react-native-numeric-input'
 const { height, width } = Dimensions.get('screen')
 export default class HomePage extends Component {
   constructor() {
@@ -49,69 +40,17 @@ export default class HomePage extends Component {
 
   async componentDidMount() {
     this.setUpLang();
-
      firebase.database().ref(`meals`).once('value', snap => {
-        console.log('snap', snap);
-
         const val = snap.val();
-        console.log('val', val);
-
         const meals = Object.values(val)
         console.log('meals', meals);
-        // this.setState({ packages, spinner: false, packagesObj: val });
         this.setState({ meals });
         this.setState({doneFetching: true})
 
     })
 
 }
-  renderSize(sizeType) {
-    const { size } = this.state;
-    return (
-      <TouchableOpacity onPress={() => {
-        this.setState({ size: sizeType })
-      }} style={{ height: 20, width: 20, borderWidth: 1, borderColor: 'black', justifyContent: 'center', backgroundColor: size === sizeType ? "white" : '#e6b800' }}>
-        <Text style={{ fontWeight: 'bold', textAlign: 'center', justifyContent: 'center' }}>{sizeType}</Text>
-      </TouchableOpacity>
-    )
-  }
 
-  renderNumber(value) {
-    return (
-
-      this.state.isChecked6 ? (
-
-
-        <NumericInput
-          value={value}
-          onChange={value => this.setState({ value })}
-          totalWidth={80}
-          totalHeight={32}
-          iconSize={35}
-          step={1}
-          minValue={1}
-          valueType='real'
-          rounded={true}
-          textColor='black'
-          iconStyle={{ fontWeight: 'bold' }}
-          editable={false}
-          borderColor='#ffdb4d'
-          inputStyle={{ fontWeight: 'bold' }}
-          rightButtonBackgroundColor='#ffdb4d'
-          leftButtonBackgroundColor='#ffdb4d' />
-      ) : null
-    )
-  }
-  // storeData = async (x) => {
-  //   try {
-  //     alert('x')
-  //     await AsyncStorage.setItem('alldata', JSON.stringify(x))
-  //     console.log(x)
-  //   } catch (e) {
-  //     // saving error
-  //   }
-  // }
-  
   async setUpLang() {
     try {
         let lang = await AsyncStorage.getItem('lang')
@@ -154,8 +93,6 @@ setLang(lang) {
               <View>
                 <TouchableOpacity onPress={() => {
                   this.props.navigation.navigate('Single', { meals:this.state.meals[index] });
-                  console.log('f',this.state.meals[index])
-
                 }}
                   style={{ elevation: 5, backgroundColor: '#e6b800', width: width, marginBottom: 4.5, borderRadius: 20, width: width * .98, marginTop: 5 }}>
                   <View style={{ flexDirection: 'row' }}>
@@ -207,36 +144,5 @@ const styles = StyleSheet.create({
     paddingLeft: width * 0.07,
     marginHorizontal: 20,
     justifyContent: 'space-around'
-  },
-
-  textSignup: {
-    color: 'white',
-    fontSize: 30,
-    fontWeight: 'bold',
-    marginHorizontal: 97
-  },
-  linearGradient: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 15,
-    width: width * 0.75,
-    height: height * 0.055,
-  },
-
-  inputText: {
-    color: '#000000',
-    fontSize: 17,
-    textAlign: 'left',
-    fontWeight: 'normal',
-    width: width * 0.75,
-    height: height * 0.065,
-    borderRadius: 10,
-    borderColor: 'white',
-    borderWidth: 2
-  },
-  bottonText: {
-    color: 'black',
-    fontSize: 20,
-    fontWeight: 'bold',
   },
 });

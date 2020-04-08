@@ -13,27 +13,7 @@ import Profile from './profile'
 import strings from '../component/Localization';
 
 import { Container, Header, Content, Footer, FooterTab, Button, Icon, Text } from 'native-base';
-class MyHomeScreen extends React.Component {
-  
-  render() {
-    const {routeName , isActive} = this.props;
 
-    return (
-      <View>
-        <Button
-          onPress={() => this.props.navigation.openDrawer()}
-
-          title="Go to notifications"
-        />
-        <Button
-          onPress={() => this.props.navigation.navigate('second')}
-
-          title="Go to notifications"
-        />
-      </View>
-    );
-  }
-}
 class Hazem extends React.Component {
  async componentDidMount() {
         
@@ -64,27 +44,7 @@ setLang(lang) {
 }
   render() {
 
-    return (
-          <FooterTab style={{flex:.07, backgroundColor:'white'}}>
-            <Button vertical>
-              
-              <Text>Apps</Text>
-            </Button>
-            <Button vertical>
-              <Icon name="camera" />
-              <Text>Camera</Text>
-            </Button>
-            <Button  vertical  onPress={  () => {this.props.navigation.navigate('Home')}}>
-              <Icon  name="navigate" style={{color:'red'}}/>
-              <Text>Navigate</Text>
-            </Button>
-            <Button vertical>
-              <Icon name="person" />
-              <Text>Contact</Text>
-            </Button>
-          </FooterTab>
-
-    );
+   
   }
 }
 
