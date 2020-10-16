@@ -12,34 +12,34 @@ import Maps from './screens/maps'
 
 const AppNavigator = createStackNavigator({
 
-  Login: {
-    screen: Login
-  },
-  SignUp: {
-    screen: SignUp
-  },
   Menu: {
     screen: Menu
   },
   SignUp: {
     screen: SignUp
   },
-  
- 
- 
- 
+
+  SignUp: {
+    screen: SignUp
+  },
+
+
+
+  Login: {
+    screen: Login
+  },
   Profile: {
     screen: Profile
   },
 
- 
-  Maps:{
-    screen:Maps
+
+  Maps: {
+    screen: Maps
   },
   Home: {
     screen: Home
   },
- 
+
   Orders: {
     screen: Orders
   },

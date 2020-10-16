@@ -32,7 +32,7 @@ export default class HomePage extends Component {
       //   { id: '5', name: 'Pizza Hotdog', price: 45, photo: require('../icons/menu17.png'), quantity: 1 },
       //   { id: '6', name: 'Pizza Gampry', price: 55, photo: require('../icons/menu15.png'), quantity: 1 },
       // ]
-      meals:[],
+      meals: [],
       doneFetching: false,
     }
 
@@ -40,39 +40,39 @@ export default class HomePage extends Component {
 
   async componentDidMount() {
     this.setUpLang();
-     firebase.database().ref(`meals`).once('value', snap => {
-        const val = snap.val();
-        const meals = Object.values(val)
-        console.log('meals', meals);
-        this.setState({ meals });
-        this.setState({doneFetching: true})
+    firebase.database().ref(`meals`).once('value', snap => {
+      const val = snap.val();
+      const meals = Object.values(val)
+      console.log('meals', meals);
+      this.setState({ meals });
+      this.setState({ doneFetching: true })
 
     })
 
-}
+  }
 
   async setUpLang() {
     try {
-        let lang = await AsyncStorage.getItem('lang')
-        lang = (lang == null) ? 'ar' : lang
-        this.setLang(lang)
+      let lang = await AsyncStorage.getItem('lang')
+      lang = (lang == null) ? 'ar' : lang
+      this.setLang(lang)
     } catch (e) {
-        console.log(e);
+      console.log(e);
     }
-}
+  }
 
-setLang(lang) {
+  setLang(lang) {
     try {
-        strings.setLanguage(lang);
-        AsyncStorage.setItem('lang', lang)
-        this.setState({ lang })
+      strings.setLanguage(lang);
+      AsyncStorage.setItem('lang', lang)
+      this.setState({ lang })
     } catch (e) {
-        console.log(e);
+      console.log(e);
     }
-}
+  }
   render() {
-    if(!this.state.doneFetching)
-    return (<LoadingIndicator size="large" />);
+    if (!this.state.doneFetching)
+      return (<LoadingIndicator size="large" />);
 
 
     return (
@@ -89,10 +89,10 @@ setLang(lang) {
           extraData={this.state}
           style={{ flex: .5, width: '100%', backgroundColor: 'white' }}
           renderItem={
-            ({ item ,index }) =>
+            ({ item, index }) =>
               <View>
                 <TouchableOpacity onPress={() => {
-                  this.props.navigation.navigate('Single', { meals:this.state.meals[index] });
+                  this.props.navigation.navigate('Single', { meals: this.state.meals[index] });
                 }}
                   style={{ elevation: 5, backgroundColor: '#e6b800', width: width, marginBottom: 4.5, borderRadius: 20, width: width * .98, marginTop: 5 }}>
                   <View style={{ flexDirection: 'row' }}>
@@ -100,7 +100,7 @@ setLang(lang) {
                       height: height * .09, width: width * .21,
                       resizeMode: 'stretch', marginVertical: 10, marginLeft: 10
                     }}
-                      source={{uri:item.photo}} />
+                      source={{ uri: item.photo }} />
                     <View style={{ justifyContent: 'center' }}>
                       <Text style={{ color: '#f2f2f2', textAlign: 'right', fontSize: 22, fontWeight: 'bold', marginLeft: 40 }}>{item.name}</Text>
                       <View style={{ backgroundColor: 'green', width: width * .17, marginLeft: 40, marginTop: 5, borderRadius: 6 }}>

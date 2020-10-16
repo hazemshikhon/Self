@@ -15,6 +15,7 @@ import MapView, { Marker, ProviderPropType, AnimatedRegion, Animated } from 'rea
 import flagPinkImg from '../assets/icons/flag-pink.png';
 import Geolocation from '@react-native-community/geolocation';
 const { width, height } = Dimensions.get('window');
+import RNGooglePlaces from 'react-native-google-places';
 
 const ASPECT_RATIO = width / height;
 //let LATITUDE =  31.205753;
@@ -54,6 +55,15 @@ class CustomMarkers extends React.Component {
 
   }
 
+  openSearchModal() {
+    RNGooglePlaces.openAutocompleteModal()
+      .then((place) => {
+        console.log(place);
+        // place represents user's selection from the
+        // suggestions and it is a simplified Google Place object.
+      })
+      .catch(error => console.log(error.message));  // error is a Javascript Error object
+  }
 
 
   componentDidMount = () => {
@@ -150,6 +160,10 @@ class CustomMarkers extends React.Component {
   }
   render() {
     return (
+      // <View style={{ width: '100%', height: '100%' }}>
+      //   <LottieView source={require('../icons/21227-delivery-boy-bumpy-ride.json')} autoPlay loop ></LottieView>
+
+      // </View>
       <View>
         <View style={styles.container}>
           <MapView
@@ -194,7 +208,7 @@ class CustomMarkers extends React.Component {
                 Geocoder.init("AIzaSyCK_likJq9DZSNr6V-tK7LAm0254c4ZOOk");
                 Geocoder.from(hazem.latitude, hazem.longitude)
                   .then(json => {
-                    console.log('wha',json);
+                    console.log('wha', json);
                     var addressComponent = json.results[0].address_components;
                     this.setState({
 
@@ -202,25 +216,32 @@ class CustomMarkers extends React.Component {
 
                     })
 
-                    console.log('one',addressComponent);
-                    console.log('two',this.state.Address);
-                    
+                    console.log('one', addressComponent);
+                    console.log('two', this.state.Address);
+
                   })
 
                   .catch(error => console.warn(error));
-              
-            },
-            err => console.log(err),
-          {
-            enableHighAccuracy: true,
-            timeout:10000
 
-          }
-          );
-      }}
-        style={{ alignItems: "center", borderWidth: 1 }}>
+              },
+              err => console.log(err),
+              {
+                enableHighAccuracy: true,
+                timeout: 10000
+
+              }
+            );
+          }}
+          style={{ alignItems: "center", borderWidth: 1 }}>
           <Text> Tap to to current region</Text>
         </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => this.openSearchModal()}
+        >
+          <Text>Pick a Place</Text>
+        </TouchableOpacity>
+
       </View >
     );
   }

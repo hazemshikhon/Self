@@ -19,38 +19,39 @@ import io.invertase.firebase.database.RNFirebaseDatabasePackage;
 import io.invertase.firebase.storage.RNFirebaseStoragePackage;
 import io.invertase.firebase.messaging.RNFirebaseMessagingPackage;
 import com.airbnb.android.react.maps.MapsPackage;
+import com.arttitude360.reactnative.rngoogleplaces.RNGooglePlacesPackage;
 
 public class MainApplication extends Application implements ReactApplication {
 
-  private final ReactNativeHost mReactNativeHost =
-      new ReactNativeHost(this) {
-        @Override
-        public boolean getUseDeveloperSupport() {
-          return BuildConfig.DEBUG;
-        }
+  private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
+    @Override
+    public boolean getUseDeveloperSupport() {
+      return BuildConfig.DEBUG;
+    }
 
-        @Override
-        protected List<ReactPackage> getPackages() {
-          @SuppressWarnings("UnnecessaryLocalVariable")
-          List<ReactPackage> packages = new PackageList(this).getPackages();
-          // Packages that cannot be autolinked yet can be added manually here, for example:
-          // packages.add(new MyReactNativePackage());
-          packages.add(new RNFirebaseCrashlyticsPackage());
+    @Override
+    protected List<ReactPackage> getPackages() {
+      @SuppressWarnings("UnnecessaryLocalVariable")
+      List<ReactPackage> packages = new PackageList(this).getPackages();
+      // Packages that cannot be autolinked yet can be added manually here, for
+      // example:
+      // packages.add(new MyReactNativePackage());
+      packages.add(new RNFirebaseCrashlyticsPackage());
       packages.add(new RNFirebaseAuthPackage());
       packages.add(new RNFirebaseDatabasePackage());
       packages.add(new RNFirebaseStoragePackage());
       packages.add(new RNFirebaseMessagingPackage());
-       new ReactNativeLocalizationPackage();
-        new ReactNativeRestartPackage();
-       
-          return packages;
-        }
+      new ReactNativeLocalizationPackage();
+      new ReactNativeRestartPackage();
+      new RNGooglePlacesPackage();
+      return packages;
+    }
 
-        @Override
-        protected String getJSMainModuleName() {
-          return "index";
-        }
-      };
+    @Override
+    protected String getJSMainModuleName() {
+      return "index";
+    }
+  };
 
   @Override
   public ReactNativeHost getReactNativeHost() {
@@ -73,9 +74,9 @@ public class MainApplication extends Application implements ReactApplication {
     if (BuildConfig.DEBUG) {
       try {
         /*
-         We use reflection here to pick up the class that initializes Flipper,
-        since Flipper library is not available in release mode
-        */
+         * We use reflection here to pick up the class that initializes Flipper, since
+         * Flipper library is not available in release mode
+         */
         Class<?> aClass = Class.forName("com.facebook.flipper.ReactNativeFlipper");
         aClass.getMethod("initializeFlipper", Context.class).invoke(null, context);
       } catch (ClassNotFoundException e) {
